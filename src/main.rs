@@ -446,8 +446,6 @@ fn test_size(
     let mut s1 = 0.0;
     let mut s2 = 0.0;
 
-    println!("m = {}", m);
-
     for _ in 0..t {
         init_v = lpc[rng.gen_range(0..lpc.len())];
         pubd_list.clear();
@@ -572,8 +570,7 @@ fn test_global_coeff(
     n: usize,
     lpc: &Vec<usize>,
     rng: &mut ThreadRng,
-    p_pri: f64,
-) {
+) -> f64 {
     let mut init_v;
 
     let t = 100; // Default val: 1000
@@ -611,7 +608,7 @@ fn test_global_coeff(
         s1 += coeff;
     }
     s1 /= t as f64;
-    println!("Original algorithm: {}", s1);
+    return s1;
 }
 
 fn read_data(
@@ -670,7 +667,7 @@ fn main() {
     let ex_avgcoeff = exact_avgcoeff(&adj_list, n);
     println!("Exact average coeff: {}", ex_avgcoeff);
 
-    println!("p,avgd,avgd*,orid,prod,avgc,avgc*,oriavgc,proavgc");
+    println!("p,avgd,avgd*,orid,prod,avgc,avgc*,oriavgc,proavgc,globalc,origloc,size,size*,oris,pros");
     while p_pri <= 0.8 {
         let mut is_pub = vec![true; n + 1];
         init_pub(&mut is_pub, n, &mut rng, p_pri);
@@ -684,15 +681,15 @@ fn main() {
         let (ori_d, pro_d) = test_avg_degree(&adj_list, &is_pub, n, &lpc, &mut rng);
 
         let ex_lpcsize = lpc.len();
-        // test_size(&adj_list, &is_pub, n, &lpc, &mut rng);
+        let (ori_s, pro_s) = test_size(&adj_list, &is_pub, n, &lpc, &mut rng);
 
         let ex_lpcavgcoeff = exact_lpcavgcoeff(&adj_list, n, &is_pub, &lpc);
 
         let (ori_avgc, pro_avgc) = test_avg_coeff(&adj_list, &is_pub, n, &lpc, &mut rng);
-        // test_global_coeff(&adj_list, &is_pub, n, &lpc, &mut rng, p_pri);
+        let ori_gloc = test_global_coeff(&adj_list, &is_pub, n, &lpc, &mut rng);
 
         println!(
-            "{},{},{},{},{},{},{},{},{}",
+            "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}",
             p_pri,
             ex_avgd,
             ex_lpcavgd,
@@ -701,7 +698,13 @@ fn main() {
             ex_avgcoeff,
             ex_lpcavgcoeff,
             ori_avgc,
-            pro_avgc
+            pro_avgc,
+            ex_gcoeff,
+            ori_gloc,
+            n,
+            ex_lpcsize,
+            ori_s,
+            pro_s
         );
 
         p_pri += 0.1;
