@@ -603,7 +603,6 @@ fn test_global_coeff(
             &mut phi_list1,
             &mut phi_list2,
         );
-        //
         let coeff = global_coeff(&pubd_list, &phi_list1);
         s1 += coeff;
     }
@@ -642,16 +641,19 @@ fn read_data(
 }
 
 fn main() {
-    // let mut o_file = File::create("output.txt").unwrap();
     let mut rng = rand::thread_rng();
     let mut adj_list = vec![EMPTY_VEC; N];
 
-    // let n = 10000;
+    // Random graph generator
+    // let n = 1000;
     // rand_adj(&mut adj_list, n, 50.0 / (n as f64 - 1.0), &mut rng);
 
     let mut n = 0;
-    let file_name = "GitHub.csv"; // "CA-GrQc.csv", "p2p-Gnutella04.csv", p2p-Gnutella31.csv
-    read_data(&mut adj_list, &mut n, file_name, false).ok(); // If data has bidirectional edge, set bi_edge to true
+
+    let file_name = "YouTube.csv";
+
+    // If data has bidirectional edge, set bi_edge to true (for CAIDA data)
+    read_data(&mut adj_list, &mut n, file_name, false).ok(); 
     println!("Graph size n: {}", n);
 
     let mut lpc: Vec<usize> = Vec::with_capacity(n);

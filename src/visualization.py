@@ -38,6 +38,36 @@ if __name__ == '__main__':
     plt.legend()
     plt.savefig(data_name+'_avgc.jpg', dpi=450)
 
+
+    fig, ax = plt.subplots()
+
+    ax.set_xlabel('Private probability p')
+    ax.set_ylabel('Size')
+    ax.set_title('Estimate size on ' +
+                 data_name + ' data')
+    ax.set_ylim([0, df['size'].max()*1.1])
+    plt.plot(df['p'], df['size'], '--k', label='Size of G')
+    plt.plot(df['p'], df['oris'], '-go', label='Original Estimator')
+    plt.plot(df['p'], df['pros'], '-ro', label='Proposed Estimator')
+
+    plt.plot(df['p'], df['size*'], '--', label='Size of G*')
+    plt.plot(df['p'], df['size'] * (1-df['p']), '--', label='(1-p) size of G')
+    plt.legend()
+    plt.savefig(data_name+'_size.jpg', dpi=450)
+
+    fig, ax = plt.subplots()
+
+    ax.set_xlabel('Private probability p')
+    ax.set_ylabel('Size')
+    ax.set_title('Estimate global clustering coefficient on ' +
+                 data_name + ' data')
+    ax.set_ylim([0, df['origloc'].max()*2])
+    plt.plot(df['p'], df['globalc'], '--k', label='Global Clustering Coefficient of G')
+    plt.plot(df['p'], df['origloc'], '-go', label='Original Estimator')
+
+    plt.legend()
+    plt.savefig(data_name+'_gc.jpg', dpi=450)
+
     fig, ax = plt.subplots()
 
     ax.set_xlabel('Private probability p')
@@ -62,3 +92,26 @@ if __name__ == '__main__':
              '-ro', label='Proposed Estimator Error')
     plt.legend()
     plt.savefig(data_name+'_avgderror.jpg', dpi=450)
+
+    fig, ax = plt.subplots()
+
+    ax.set_xlabel('Private probability p')
+    ax.set_ylabel('Error')
+    ax.set_title('Error of estimate size on ' + data_name + ' data')
+    plt.plot(df['p'], (1-df['oris']/df['size'])**2,
+             '-go', label='Smooth Estimator Error')
+    plt.plot(df['p'], (1-df['pros']/df['size'])**2,
+             '-ro', label='Proposed Estimator Error')
+    plt.legend()
+    plt.savefig(data_name+'_sizeerror.jpg', dpi=450)
+
+    fig, ax = plt.subplots()
+
+    ax.set_xlabel('Private probability p')
+    ax.set_ylabel('Error')
+    ax.set_title('Error of global clustering coefficient on ' + data_name + ' data')
+    plt.plot(df['p'], (1-df['origloc']/df['globalc'])**2,
+             '-go', label='Estimator Error')
+    plt.legend()
+    plt.savefig(data_name+'_gcerror.jpg', dpi=450)
+
